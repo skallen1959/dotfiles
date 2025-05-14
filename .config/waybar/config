@@ -1,0 +1,116 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 4,
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    // "modules-right": ["pulseaudio", "network", "custom/wireguard", "custom/monitors", "cpu", "memory", "temperature", "backlight", "battery", "tray"],
+    "modules-right": ["pulseaudio", "network", "custom/wireguard", "custom/monitors", "battery", "tray"],
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "10": "10",
+            "urgent": "⚠",
+            "focused": "➤",
+            "default": "○"
+        }
+    },
+
+    "hyprland/window": {
+        "max-length": 50,
+        "separate-outputs": true
+    },
+
+    "tray": {
+        "spacing": 6
+    },
+
+    "clock": {
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{:%a, %d %b  %H:%M}"
+    },
+
+    "cpu": {
+        "format": "{usage}% ",
+        "tooltip": false
+    },
+
+    "memory": {
+        "format": "{}% "
+    },
+
+    "temperature": {
+        "critical-threshold": 80,
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": ["", "", ""]
+    },
+
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["🌕", "🌔", "🌓", "🌒", "🌑"] 
+    },
+
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "⚡️ {capacity}%",
+        "format-plugged": "🔌 {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": ["", "", "", "", ""]
+    },
+
+    "network": {
+        "format-wifi": "{essid} ({signalStrength}%) 📶",
+        "format-ethernet": "{ipaddr}/{cidr} 🌐",
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "format-linked": "{ifname} (No IP) 🔗",
+        "format-disconnected": "⚠ Disconnected",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-bluetooth": "{icon} {volume}% 🎧",
+        "format-bluetooth-muted": "🔇 {icon}",
+        "format-muted": "🔇",
+        "format-icons": {
+            "headphone": "🎧",
+            "hands-free": "🎧",
+            "headset": "🎧",
+            "phone": "📱",
+            "portable": "🔊",
+            "car": "🚗",
+            "default": ["🔈", "🔉", "🔊"]
+        },
+        "on-click": "pavucontrol"
+    },
+    "custom/wireguard": {
+        "format": " {} ",
+        "exec": "~/bin/wireguard.sh short",
+        "interval": 5,
+        "tooltip": "true",
+        "return-type": "json"
+    },
+    "custom/monitors": {
+        "format": "󰍹 {} ",
+        "exec": "/home/anders/bin/monitor-status.sh",
+        "interval": 5,
+        "tooltip": false
+    }
+}

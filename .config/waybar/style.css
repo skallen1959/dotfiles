@@ -1,0 +1,152 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "Roboto Mono", "Font Awesome 6 Free", monospace;
+    font-weight: bold;
+    font-size: 12px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(21, 22, 30, 0.9);
+    color: #cdd6f4;
+}
+
+tooltip {
+    background: #1e1e2e;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #11111b;
+}
+
+#workspaces button {
+    padding: 5px;
+    color: #6c7086;
+    margin-right: 5px;
+}
+
+#workspaces button.active {
+    color: #a6adc8;
+    background: #313244;
+    border-radius: 10px;
+}
+
+#workspaces button.focused {
+    color: #a6adc8;
+    background: #313244;
+    border-radius: 10px;
+}
+
+#workspaces button.urgent {
+    color: #11111b;
+    background: #f38ba8;
+    border-radius: 10px;
+}
+
+#workspaces button:hover {
+    background: #11111b;
+    color: #cdd6f4;
+    border-radius: 10px;
+}
+
+#window,
+#clock,
+#battery,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#temperature,
+#backlight,
+#tray {
+    background: #1e1e2e;
+    padding: 0px 10px;
+    margin: 3px 0px;
+    margin-top: 6px;
+    border-radius: 10px;
+}
+
+#tray {
+    margin-right: 10px;
+}
+
+#workspaces {
+    background: #1e1e2e;
+    border-radius: 10px;
+    margin-left: 10px;
+    padding-right: 0px;
+    padding-left: 5px;
+    margin-top: 6px;
+}
+
+#window {
+    background: #1e1e2e;
+    margin-left: 10px;
+}
+
+#clock {
+    color: #cdd6f4;
+}
+
+#battery {
+    color: #a6e3a1;
+}
+
+#battery.charging {
+    color: #a6e3a1;
+}
+
+#battery.warning:not(.charging) {
+    color: #f9e2af;
+}
+
+#battery.critical:not(.charging) {
+    color: #f38ba8;
+}
+
+#network {
+    color: #89b4fa;
+}
+
+#memory {
+    color: #cba6f7;
+}
+
+#cpu {
+    color: #f38ba8;
+}
+
+#temperature {
+    color: #f5c2e7;
+}
+
+#temperature.critical {
+    color: #f38ba8;
+}
+
+#backlight {
+    color: #f9e2af;
+}
+
+#pulseaudio {
+    color: #89b4fa;
+}
+
+#pulseaudio.muted {
+    color: #f38ba8;
+}
+
+/* Styling för WireGuard-modulen */
+#wireguard {
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+#wireguard.connected {
+    color: #00ff00; /* Grön för ansluten */
+}
+
+#wireguard.disconnected {
+    color: #ff0000; /* Röd för frånkopplad */
+}

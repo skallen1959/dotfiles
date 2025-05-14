@@ -8,6 +8,8 @@ My personal configuration for Arch Linux with Hyprland, Catppuccin Mocha, and Ne
 - `.config/nvim/`: Neovim with Kanagawa theme.
 - `bin/`: Scripts like toggle-pasystray.sh.
 
+More to come..
+
 ## Usage
 ```bash
 git clone git@github.com:skallen1959/dotfiles.git ~/dotfiles

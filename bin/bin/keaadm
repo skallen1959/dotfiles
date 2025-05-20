@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Create virtual environment if it doesn't exist
+if [ ! -d "$HOME/.venv" ]; then
+    python3 -m venv $HOME/.venv || {
+        echo "Failed to create virtual environment"
+        exit 1
+    }
+fi
+
+# Activate virtual environment
+source $HOME/.venv/bin/activate || {
+    echo "Failed to activate virtual environment"
+    exit 1
+}
+
+# Check if mysql-connector-python is already installed
+pip freeze | grep -q mysql-connector-python || {
+    # Install only if not found
+    pip install mysql-connector-python || {
+        echo "Failed to install mysql-connector-python"
+        deactivate
+        exit 1
+    }
+}
+pip freeze | grep -q pyyaml || {
+    # Install only if not found
+    pip install pyyaml || {
+        echo "Failed to install pyyaml"
+        deactivate
+        exit 1
+    }
+}
+
+python3 $HOME/scripts/kea-admin.py "$@" || {
+    echo "Failed to run kea-admin.py"
+    deactivate
+    exit 1
+}
+
+# Deactivate virtual environment
+deactivate

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Övervaka lockets tillstånd och ändra skärmkonfiguration
+LAST_STATE=""
+
+while true; do
+    # Hantera oväntade formateringar
+    CURRENT_STATE=$(cat /proc/acpi/button/lid/LID/state | grep -o "open\|closed")
+
+    if [ "$CURRENT_STATE" != "$LAST_STATE" ]; then
+        echo "Tillstånd ändrades till: $CURRENT_STATE"
+        if [ "$CURRENT_STATE" = "closed" ]; then
+            echo "Locket stängdes, inaktiverar inbyggd skärm"
+            # Försök flera gånger för att säkerställa att eDP-1 inaktiveras
+            for i in {1..3}; do
+                hyprctl keyword monitor "eDP-1,disable" || echo "Fel vid inaktivering av eDP-1, försök $i"
+                hyprctl keyword monitor "HDMI-A-1,3840x2160@60,0x0,1.5" || echo "Fel vid konfiguration av HDMI-A-1, försök $i"
+                sleep 0.5
+                if ! hyprctl monitors | grep -q "Monitor eDP-1.*disabled: false"; then
+                    echo "eDP-1 inaktiverad"
+                    break
+                fi
+            done
+        elif [ "$CURRENT_STATE" = "open" ]; then
+            # Kontrollera om HDMI är ansluten
+            if hyprctl monitors | grep -q "HDMI-A-1"; then
+                echo "Locket öppnades, aktiverar båda skärmarna"
+                hyprctl keyword monitor "eDP-1,1920x1080@60,0x0,1.5" || echo "Fel vid aktivering av eDP-1"
+                hyprctl keyword monitor "HDMI-A-1,3840x2160@60,1280x0,1.5" || echo "Fel vid konfiguration av HDMI-A-1"
+            else
+                echo "Locket öppnades, aktiverar endast laptop-skärm"
+                hyprctl keyword monitor "eDP-1,1920x1080@60,0x0,1.5" || echo "Fel vid aktivering av eDP-1"
+                hyprctl keyword monitor "HDMI-A-1,disable" || echo "Fel vid inaktivering av HDMI-A-1"
+            fi
+        fi
+
+        LAST_STATE="$CURRENT_STATE"
+    fi
+
+    sleep 1
+done

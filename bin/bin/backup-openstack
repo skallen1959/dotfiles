@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+HOSTS="aries.wip.kna taurus.wip.kna gemini.wip.kna cancer.wip.kna leo.wip.kna virgo.wip.kna"
+
+HOSTS="aries.wip.kna"
+
+do_backuo() {
+    local host="$1"
+    echo "Backing up $1"
+    BACKUP_ROOT="/home/anders/wip/backups/${host}"
+    DATE=$(date +%Y-%m-%d_%H:%M)
+
+    # Create backup directories if they don't exist
+    mkdir -p "${BACKUP_ROOT}/backup-${DATE}"
+
+    # Perform the rsync with logging
+    rsync -avz --delete \
+        --backup \
+        --backup-dir="${BACKUP_ROOT}/backup-${DATE}/" \
+        --stats \
+        root@${host}:/etc \
+        "${BACKUP_ROOT}/" \
+        2>&1 | tee -a "${BACKUP_ROOT}/rsync-${DATE}.log" >/dev/null
+}
+
+for host in ${HOSTS}; do
+    if $(ping -c1 $host >/dev/null); then
+        echo "${host} is up"
+        do_backuo $host
+    else
+        echo "${host} is down"
+    fi
+done
+exit
+
+BACKUP_ROOT="/home/anders/wip/Openstack/aries/etc"
+DATE=$(date +%Y-%m-%d_%H:%M)
+
+# Create backup directories if they don't exist
+mkdir -p "${BACKUP_ROOT}/backup-${DATE}"
+
+# Perform the rsync with logging
+rsync -avz --delete \
+    --backup \
+    --backup-dir="${BACKUP_ROOT}/backup-${DATE}/" \
+    --stats \
+    root@aries:/etc/ \
+    "${BACKUP_ROOT}/" \
+    2>&1 | tee "${BACKUP_ROOT}/rsync-${DATE}.log"

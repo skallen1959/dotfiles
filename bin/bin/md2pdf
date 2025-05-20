@@ -1,0 +1,256 @@
+#!/usr/bin/env bash
+
+#set -ex
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+OS=$(uname -s | tr A-Z a-z)
+
+case $OS in
+  linux)
+    source /etc/os-release
+    case $ID in
+      debian|ubuntu|mint|pop)
+        PKG="apt"
+        ;;
+
+      fedora|rhel|centos)
+        PKG="dnf"
+        ;;
+
+      arch)
+        PKG="pacman -S "
+        ;;
+
+      *)
+        echo -n "unsupported linux distro"
+        ;;
+    esac
+    ;;
+
+  darwin)
+    PKG="brew"
+    ;;
+
+  *)
+    echo -n "unsupported OS"
+    ;;
+esac
+
+# Default to English, if you want to change add language as a second argument
+# Like this: md2pdf Document de
+#
+LANG_SETTINGS="-V lang=en"
+
+# Download URL for the Eisvogel template
+#EISVOGEL_DL="https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/master/eisvogel.tex"
+EISVOGEL_DL="https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/v3.2.0/Eisvogel-3.2.0.zip"
+SOUL_DL=https://mirrors.ctan.org/macros/generic/soul.zip
+TEMPLATE_DIR="${HOME}/.pandoc/templates"
+# Find out the users real name
+USER="$(getent passwd "$(whoami)" | cut -d ':' -f 5)"
+# We could not find the name, set an offensive name :)
+if [ -z "$USER" ]; then
+  USER="An unknown bastard"
+fi
+
+confirm() {
+  local response
+  local msg="${1:-Are you sure} (y/[N])? "; shift
+  read -r $* -p "$msg" response || echo
+  case "$response" in
+    [yY][eE][sS]|[yY]) return 0 ;;
+    [nN][oO]|[nN]) return 1 ;;
+    *)
+      return 1 ;;
+  esac
+}
+
+if ! $(command -v curl > /dev/null) ; then
+  if confirm "I didn't find curl, install?"; then
+    case $OS in
+      linux)
+        sudo ${PKG} install curl
+        ;;
+      darwin)
+        ${PKG} install curl
+        ;;
+    esac
+  fi
+fi
+
+if ! $(command -v unzip > /dev/null) ; then
+  if confirm "I didn't find unzip, install?"; then
+    case $OS in
+      linux)
+        sudo ${PKG} install unzip
+        ;;
+      darwin)
+        ${PKG} install unzip
+        ;;
+    esac
+  fi
+fi
+
+if [ ! -d "$HOME/.pandoc/templates" ]; then
+  if confirm "Do you want to create .pandoc/templates?"; then
+    echo "Creating directory $HOME/.pandoc/templates"
+    mkdir -p "$HOME/.pandoc/templates"
+  fi
+fi
+
+if [ ! -d "$HOME/texmf/tex/latex" ]; then
+  if confirm "Do you want to create $HOME/texmf/tex/latex?"; then
+    echo "Creating directory $HOME/texmf/tex/latex"
+    mkdir -p "$HOME/texmf/tex/latex"
+  fi
+else
+  if [ ! -d "$HOME/texmf/tex/latex/soul" ]; then
+    if confirm "Do you want to install the soul package in $HOME/texmf/tex/latex?"; then
+      curl ${SOUL_DL} -L -o "$HOME/texmf/tex/latex/soul.zip"
+      MY_DIR=$(pwd)
+      cd $HOME/texmf/tex/latex
+      unzip soul.zip
+      cd soul
+      latex soul.ins
+      cd "$MY_DIR"
+    fi
+  fi
+fi
+
+if [ ! -d "$HOME/texmf/tex/latex/soul" ]; then
+  if confirm "Do you want to install the soul package in $HOME/texmf/tex/latex?"; then
+    curl ${SOUL_DL} -o "$HOME/texmf/tex/latex/soul.zip"
+    cd $HOME/texmf/tex/latex
+  fi
+fi
+
+
+if [ "$#" -eq 0 ]; then
+cat << EOF
+
+  No arguments provided
+  You should give the name of the .md file
+  without the .md
+
+  For example: md2pdf My_Book
+
+EOF
+  exit 1
+else
+  PRJ="$1"
+  echo "Trying to find files related to ${PRJ}"
+fi
+
+
+WDIR="$(pwd)"
+
+echo "Working dir: ${WDIR}"
+
+# Look for the .md file
+if [ ! -f "${WDIR}/${PRJ}.md" ]; then
+
+cat << EOF
+
+  I could not find "${WDIR}/${PRJ}.md" 
+  Did you missspell?
+
+EOF
+  exit 1
+fi
+
+if [ ! -z "$2" ]; then
+  case $2 in
+    i)
+      TMPL_YAML="${TEMPLATE_DIR}/istudios.yaml"
+    ;;
+    d)
+      TMPL_YAML="${TEMPLATE_DIR}/default.yaml"
+    ;;
+    *)
+      echo "$3 is not a valid template"
+    ;;
+   esac
+else
+  # Find template yaml file
+  if [ -f "${WDIR}/${PRJ}.yaml" ]; then
+    TMPL_YAML="${WDIR}/${PRJ}.yaml"
+  else
+    if [ -d "${TEMPLATE_DIR}" ]; then
+      if [ -f "${TEMPLATE_DIR}/default.yaml" ]; then
+        # Didn't find a template, using default
+        TMPL_YAML="${TEMPLATE_DIR}/default.yaml"
+      else
+  cat << EOF > "${TEMPLATE_DIR}/default.yaml"
+---
+note_type: reference
+writing_type: draft
+title: "Set title in a yaml section in top of your document"
+author: "Unknown author"
+titlepage: true
+titlepage-rule-color: "8f8f8f"
+titlepage-text-color: "393939"
+footer-left: \thetitle
+footer-center: \thepage
+footer-right: \theauthor
+colorlinks: "ff0d8a"
+papersize:
+  -a4
+toc: true
+toc-depth: 3
+toc-own-page: true
+linkcolor: magenta
+urlcolor: magenta
+listings-no-page-break: true
+code-block-font-size: \scriptsize
+output:
+  pdf:
+    pdf-engine: xelatex
+    output: academy-htb.pdf
+    from: markdown
+    template: eisvogel
+    listings: true
+---
+EOF
+        TMPL_YAML="${TEMPLATE_DIR}/default.yaml"
+      fi
+    fi
+  fi
+fi
+
+echo "Using YAML template: ${TMPL_YAML}"
+
+if [ ! -z "$3" ]; then
+  LANG_SETTINGS="-V lang=${3}"
+fi
+
+# Find a special .tex teplate
+if [ -f "${WDIR}/${PRJ}.tex" ]; then
+  TMPL_TEX="${WDIR}/${PRJ}.tex"
+else
+  # Didn't find a template, using default
+  if [ -f "${TEMPLATE_DIR}/eisvogel.latex" ]; then
+    TMPL_TEX="eisvogel"
+  else
+    if [ -d "${TEMPLATE_DIR}" ]; then
+      if confirm "The eisvogel template is missing, download?"; then
+        #curl ${EISVOGEL_DL} -o "${TEMPLATE_DIR}/eisvogel.latex"
+          curl -L ${EISVOGEL_DL} -o /tmp/eisvogel.zip
+          unzip -o /tmp/eisvogel -d /tmp/eisvogel
+          cp /tmp/eisvogel/Eisvogel-3.2.0/eisvogel.latex "${TEMPLATE_DIR}/eisvogel.latex"
+          rm -rf /tmp/eisvogel /tmp/eisvogel.zip
+        TMPL_TEX="eisvogel"
+      else
+        echo "Cannot create PDF without a template!"
+        exit 1
+      fi
+    else
+      echo "Template directory is missing!"
+      echo "No template found"
+      echo "Cannot create PDF without a template!"
+      exit 1
+    fi
+  fi
+fi
+echo "Using TEX template: ${TMPL_TEX}"
+
+pandoc ${LANG_SETTINGS} --highlight-style=pygments ${TMPL_YAML} --template ${TMPL_TEX} ${PRJ}.md -o ${PRJ}.pdf

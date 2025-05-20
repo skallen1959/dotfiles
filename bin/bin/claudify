@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 0 ]]; then
+    echo "I need a path"
+    exit 1
+fi
+
+find "$1" -type f -exec sh -c 'echo "=== $1 ==="; cat "$1"; echo' _ {} \;

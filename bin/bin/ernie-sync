@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+DIR=$(pwd)
+
+cd ~
+rsync -avr --delete wip/ root@ernie:docs/skallen/wip/
+
+cd ${DIR}

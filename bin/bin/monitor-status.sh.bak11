@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Parsa hyprctl monitors för att hitta aktiva skärmar
+output=$(hyprctl monitors)
+
+# Kolla status för eDP-1 och HDMI-A-1 med awk
+EDP_ACTIVE=$(echo "$output" | awk '/Monitor eDP-1/{p=1; monitor="eDP-1"} p&&/disabled: false/{print monitor; p=0} p&&/disabled: true/{p=0}' || echo "")
+HDMI_ACTIVE=$(echo "$output" | awk '/Monitor HDMI-A-1/{p=1; monitor="HDMI-A-1"} p&&/disabled: false/{print monitor; p=0} p&&/disabled: true/{p=0}' || echo "")
+
+# Fallback till grep om awk misslyckas
+if [ -z "$EDP_ACTIVE" ] && [ -z "$HDMI_ACTIVE" ]; then
+    EDP_ACTIVE=$(echo "$output" | grep -A18 "Monitor eDP-1" | grep -q "disabled: false" && echo "eDP-1" || echo "")
+    HDMI_ACTIVE=$(echo "$output" | grep -A18 "Monitor HDMI-A-1" | grep -q "disabled: false" && echo "HDMI-A-1" || echo "")
+fi
+
+if [ -n "$EDP_ACTIVE" ] && [ -n "$HDMI_ACTIVE" ]; then
+    TEXT="Both screens"
+elif [ -n "$EDP_ACTIVE" ]; then
+    TEXT="Laptop screen"
+elif [ -n "$HDMI_ACTIVE" ]; then
+    TEXT="External screen"
+else
+    TEXT="No screen"
+fi
+
+echo "{\"text\": \"$TEXT\", \"tooltip\": \"$EDP_ACTIVE $HDMI_ACTIVE\"}"

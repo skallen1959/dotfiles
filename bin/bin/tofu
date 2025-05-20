@@ -1,0 +1,18 @@
+# ${HOME}/bin/tofu
+#!/bin/bash
+
+
+
+# Get absolute path to the OpenTofu project root
+PROJECT_ROOT="/home/anders/sysadmin/opentofu"
+
+# Get relative path from current directory to project root
+RELATIVE_PATH=$(realpath --relative-to="$PROJECT_ROOT" "$PWD")
+
+# Run OpenTofu in Docker with proper volume mounts
+docker run -i -t --rm \
+  -v "$PROJECT_ROOT":/workspace \
+  -v "${HOME}/.terraform.d":/root/.terraform.d \
+  -w "/workspace/$RELATIVE_PATH" \
+  ghcr.io/opentofu/opentofu:latest "$@"
+

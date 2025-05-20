@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+mariadb --defaults-file=/home/anders/ssl/dbcluster.cnf -p
+

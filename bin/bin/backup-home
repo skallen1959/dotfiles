@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+rsync -avr --progress --delete \
+--exclude=".cache" \
+--exclude=".config/Slack" \
+--exclude=".config/discord" \
+--exclude=".config/google-chrome" \
+--exclude=".local" \
+--exclude="yay" \
+--exclude=".npm" \
+--exclude=".var" \
+--exclude=".wine" \
+/home/anders/ /run/media/anders/Skallen/home/anders/

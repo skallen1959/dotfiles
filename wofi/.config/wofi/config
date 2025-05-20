@@ -1,0 +1,5 @@
+mode=drun
+allow_images=true
+insensitive=true
+prompt=Search apps...
+style=~/.config/wofi/style.css

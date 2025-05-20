@@ -1,0 +1,18 @@
+profile both-screens {
+    output "eDP-1" enable mode 1920x1080@60 position 0,0 scale 1.5
+    output "HDMI-A-1" enable mode 3840x2160@60 position 1280,0 scale 1.5
+}
+
+profile external-only {
+    output "eDP-1" disable
+    output "HDMI-A-1" enable mode 3840x2160@60 position 0,0 scale 1.5
+}
+
+profile laptop-only {
+    output "eDP-1" enable mode 1920x1080@60 position 0,0 scale 1.5
+    output "HDMI-A-1" disable
+}
+
+profile fallback {
+    output "*" enable mode 1920x1080@60 position 0,0 scale 1.0
+}

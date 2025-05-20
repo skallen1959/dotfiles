@@ -1,0 +1,21 @@
+#command = /home/anders/bin/tmux-session
+# The syntax is "key = value". The whitespace around the
+# equals doesn't matter.
+theme = catppuccin-mocha
+#theme = "Aardvark Blue"
+
+#fullscreen = true
+#background = 282c34
+#foreground= ffffff
+
+# Comments start with a `#` and are only valid on their own line.
+# Blank lines are ignored!
+
+#keybind = ctrl+c=close_surface
+#keybind = ctrl+d=new_split:right
+
+# Empty values reset the configuration to the default value
+#font-family = "JetBrainsMono Nerd Font"
+font-family = "MesloLGL Nerd Font"
+font-size = 18
+background-opacity = 0.8

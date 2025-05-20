@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-mariadb --no-defaults --user=root --password=Tram22maria

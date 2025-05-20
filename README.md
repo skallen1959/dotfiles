@@ -1,3 +1,8 @@
+---
+title: Anders dotfiles
+author: Anders Karlsson
+---
+
 # Anders' Dotfiles
 My personal configuration for Arch Linux with Hyprland, Catppuccin Mocha, and Neovim.
 

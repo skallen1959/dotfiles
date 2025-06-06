@@ -12,6 +12,7 @@ My personal configuration for Arch Linux with Hyprland, Catppuccin Mocha, and Ne
 - `waybar/.config`: Waybar with Pasystray and volume control.
 - `nvim/.config`: Neovim with Kanagawa theme.
 - `bin/`: Scripts like toggle-pasystray.sh.
+- `packages/`: My installed packages.
 
 More to come..
 

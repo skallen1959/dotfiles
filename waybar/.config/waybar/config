@@ -6,7 +6,7 @@
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
     // "modules-right": ["pulseaudio", "network", "custom/wireguard", "custom/monitors", "cpu", "memory", "temperature", "backlight", "battery", "tray"],
-    "modules-right": ["pulseaudio", "network", "custom/wireguard", "custom/monitors", "battery", "tray"],
+    "modules-right": ["pulseaudio", "network",  "custom/monitors", "battery", "tray"],
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
@@ -99,13 +99,6 @@
             "default": ["🔈", "🔉", "🔊"]
         },
         "on-click": "pavucontrol"
-    },
-    "custom/wireguard": {
-        "format": " {} ",
-        "exec": "~/bin/wireguard.sh short",
-        "interval": 5,
-        "tooltip": "true",
-        "return-type": "json"
     },
     "custom/monitors": {
         "format": "󰍹 {} ",

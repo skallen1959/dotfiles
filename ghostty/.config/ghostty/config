@@ -17,5 +17,5 @@ theme = catppuccin-mocha
 # Empty values reset the configuration to the default value
 #font-family = "JetBrainsMono Nerd Font"
 font-family = "MesloLGL Nerd Font"
-font-size = 12
+font-size = 16
 background-opacity = 0.8

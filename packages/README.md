@@ -1,4 +1,4 @@
-# My install packages
+# My currently installed packages
 
 ## Arch packages
 
@@ -14,4 +14,4 @@ sudo pacman -S --needed - < ~/dotfiles/packages/pkglist.txt
 pacman -Qm | awk '{print $1}' > ~/dotfiles/packages/aurlist.txt
 
 ### Restore AUR packages
-yay -S --needed - < ~/d otfiles/packages/aurlist.txt
+yay -S --needed - < ~/dotfiles/packages/aurlist.txt

@@ -101,7 +101,7 @@
         "on-click": "pavucontrol"
     },
     "custom/monitors": {
-        "format": "󰍹 {} ",
+        "format": "󰍹  {} ",
         "exec": "/home/anders/bin/monitor-status.sh",
         "interval": 5,
         "tooltip": false

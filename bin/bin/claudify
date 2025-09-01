@@ -6,4 +6,9 @@ if [[ $# -eq 0 ]]; then
 fi
 
 #find "$1" -type f -exec sh -c 'echo "=== $1 ==="; cat "$1"; echo' _ {} \;
-find "$1" -type f -not -name "*.csr" -not -name "*.crl" -not -name "*.pem" -not -name "*.key" -not -name "*.log" -exec sh -c 'file "$1" | grep -q "text" && { echo "=== $1 ==="; cat "$1"; echo; }' _ {} \;
+#find "$1" -type f -not -name "*.csr" -not -name "*.crl" -not -name "*.pem" -not -name "*.key" -not -name "*.log" -exec sh -c 'file "$1" | grep -q "text" && { echo "=== $1 ==="; cat "$1"; echo; }' _ {} \;
+find "$1" -type f \
+    -not -name "*.csr" -not -name "*.crl" -not -name "*.pem" \
+    -not -name "*.key" -not -name "*.log" -not -name "*.jpg" \
+    -not -name "*.png" -not -name "*.pdf" \
+    -exec sh -c 'file "$1" | grep -q "text" && { echo "=== $1 ==="; cat "$1"; echo; }' _ {} \;
